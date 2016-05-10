@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+        <script src="javascripts/Chart.min.js"></script>
+        <style>
+            .tile {
+                width: 100%;
+                display: inline-block;
+                box-sizing: border-box;
+                background: #fff;
+                padding: 20px;
+                margin-bottom: 30px;
+                font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+                font-size: 14px;
+                line-height: 1.5em;
+                font-weight: 400;
+            }
+            .tile .title {
+                margin-top: 0px;
+            }
+            .tile.purple, .tile.blue, .tile.red, .tile.orange, .tile.green {
+                color: #fff;
+            }
+            .tile.purple {
+                background: #5133AB;
+            }
+            .tile.purple:hover {
+                background: #3e2784;
+            }
+            .tile.red {
+                background: #AC193D;
+            }
+            .tile.red:hover {
+                background: #7f132d;
+            }
+            .tile.green {
+                background: #00A600;
+            }
+            .tile.green:hover {
+                background: #007300;
+            }
+            .tile.blue {
+                background: #2672EC;
+            }
+            .tile.blue:hover {
+                background: #125acd;
+            }
+            .tile.orange {
+                background: #DC572E;
+            }
+            .tile.orange:hover {
+                background: #b8431f;
+            }
+
+            h3.title {
+                font-family: "Open Sans", "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+                line-height: 1.5em;
+                font-weight: 300;
+                text-align: center;
+        }
+    </style>
+
+        <script>
+
+
+            function ShowGraph(){
+
+                //alert(id);
+                document.getElementById( 'readingsdiv' ).style.display = 'block';
+                var array1=new Array();
+                var array2=new Array();
+                $.ajax({
+                    url: 'http://erddap.axiomdatascience.com/erddap/tabledap/cencoos_sensor_service.json?time,station,parameter,unit,value&time>=2016-05-09T00:00:00Z&station=%22urn:ioos:station:edu.utah.mesowest:E4371%22&parameter=%22Wind%20Speed%22&unit=%22knot%22',                  //the script to call to get data
+                    data: "",
+                    //dataType: 'json',                //data format
+                    success: function(data)          //on recieve of reply
+                    {
+
+                        //alert (data);
+                        //alert("aftersuccess");
+                        //return true;
+//                        $.each(data, function(k, v) {
+                            // /// do stuff
+                            //alert(v.time);
+                            //alert(v.value);
+//                            array1.push(v.time);
+//                            array2.push(v.value);
+                            // map.addMarker({
+                            // lat: v.lat,
+                            // lng: v.lon,
+                            // title: v.sensor,
+                            // se: v.hub,
+                            // click: function(e){
+                            // if(console.log)
+                            // console.log(e);
+                            // var newURLString = "sensor.php" +
+                            // "?id=" + v.hub;
+                            // window.location.href = newURLString;
+                            // },
+                            // mouseover: function(e){
+                            // if(console.log)
+                            // console.log(e);
+                            // }
+                            // });
+
+//                        });
+                        for (var i=0; i<data.table.rows.length; i++){
+                            array1.push(data.table.rows[i][0]);
+                            array2.push(data.table.rows[i][4]);
+                        }
+
+                        var areaChartData = {
+                            labels: array1,
+                            datasets: [
+                                {
+                                    label: "wind speed",
+                                    fillColor: "rgba(210, 214, 222, 1)",
+                                    strokeColor: "rgba(210, 214, 222, 1)",
+                                    pointColor: "rgba(210, 214, 222, 1)",
+                                    pointStrokeColor: "#c1c7d1",
+                                    pointHighlightFill: "#fff",
+                                    pointHighlightStroke: "rgba(220,220,220,1)",
+                                    data: array2
+                                }
+                            ]
+                        };
+
+                        var areaChartOptions = {
+                            //Boolean - If we should show the scale at all
+                            showScale: true,
+                            //Boolean - Whether grid lines are shown across the chart
+                            scaleShowGridLines: false,
+                            //String - Colour of the grid lines
+                            scaleGridLineColor: "rgba(0,0,0,.05)",
+                            //Number - Width of the grid lines
+                            scaleGridLineWidth: 1,
+                            //Boolean - Whether to show horizontal lines (except X axis)
+                            scaleShowHorizontalLines: true,
+                            //Boolean - Whether to show vertical lines (except Y axis)
+                            scaleShowVerticalLines: true,
+                            //Boolean - Whether the line is curved between points
+                            bezierCurve: true,
+                            //Number - Tension of the bezier curve between points
+                            bezierCurveTension: 0.3,
+                            //Boolean - Whether to show a dot for each point
+                            pointDot: false,
+                            //Number - Radius of each point dot in pixels
+                            pointDotRadius: 4,
+                            //Number - Pixel width of point dot stroke
+                            pointDotStrokeWidth: 1,
+                            //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+                            pointHitDetectionRadius: 20,
+                            //Boolean - Whether to show a stroke for datasets
+                            datasetStroke: true,
+                            //Number - Pixel width of dataset stroke
+                            datasetStrokeWidth: 2,
+                            //Boolean - Whether to fill the dataset with a color
+                            datasetFill: true,
+                            //String - A legend template
+
+                            //Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+                            maintainAspectRatio: true,
+                            //Boolean - whether to make the chart responsive to window resizing
+                            responsive: true
+                        };
+
+                        var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
+                        var lineChart = new Chart(lineChartCanvas);
+                        var lineChartOptions = areaChartOptions;
+                        lineChartOptions.datasetFill = false;
+                        lineChart.Line(areaChartData, lineChartOptions);
+                    }
+                });
+            }
+            $( function (){
+                ShowGraph();
+            });
+        </script>
+
+
+    </head>
+    <body>
+        <br><br>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <a href="/subscribedsensors">
+                        <div class="tile purple">
+                            <h3 class="title">Subscribed Sensors &nbsp;<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/sensors">
+                        <div class="tile red">
+                            <h3 class="title">All Sensors &nbsp;<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></h3>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    <a href="/mysensors">
+                        <div class="tile orange">
+                            <h3 class="title">My Sensors &nbsp;<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6" id="readingsdiv" style="margin-left:500px">
+                <div class="box box-info" >
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Readings</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="chart">
+                            <canvas id="lineChart" style="height:250px"></canvas>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div><!-- /.box -->
+            </div>
+
+        </div>
+    </body>
+</html>

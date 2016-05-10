@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+
+    <script src="angularjs/sensors.js"></script>
+
+    <link href="stylesheets/bootstrap-switch.css" rel="stylesheet">
+    <script src="javascripts/bootstrap-switch.js"></script>
+    <script>
+        $ ( function(){
+            //$("[name='my-checkbox']").bootstrapSwitch();
+            $('.mycheckboxes').bootstrapSwitch();
+            $('.mycheckboxes').on('switchChange.bootstrapSwitch',function(event,state) {
+                alert(state);
+                $(this).bootstrapSwitch('state', state, true);
+            });
+        });
+    </script>
+</head>
+<body>
+<br><br>
+<div class="container" >
+    <% if(userSensors.length > 0){ %>
+    <table class="table table-hover">
+        <tr>
+            <th>Station</th>
+            <th>Sensor ID</th>
+            <th>Sensor Type</th>
+            <th>Sensor Owner</th>
+            <th>Active</th>
+        </tr>
+        <% for(var i =0; i < userSensors.length; i++) {
+        for(var j=0; j < userSensors[i].sensors.length; j++) {
+        if(userSensors[i].sensors[j].ownerid == userid) { %>
+        <tr>
+            <td><%= userSensors[i].stationname %></td>
+            <td><%= userSensors[i].sensors[j].sensorid %></td>
+            <td><%= userSensors[i].sensors[j].sensortype %></td>
+            <td><%= userSensors[i].sensors[j].ownerid %></td>
+            <td><input type="checkbox" class = "mycheckboxes" name="mycheckbox" id="<%= userSensors[i].sensors[j].sensorid %>" checked></td>
+        </tr>
+        <% }
+        }
+        } %>
+    </table><% } %>
+    <button data-toggle="modal" data-target="#myModal" class="btn btn-success btn-lg"> Add a Sensor</button> <br><br>
+    Hello idiot!!!
+
+    <input type="checkbox" name="my-checkbox" checked>
+    <input type="checkbox" name="my-checkbox" >
+
+    <br>
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Provide Details of Your Sensor</h4>
+                </div>
+                <form action="/addSensor" method="post" >
+                    <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
+                            <label for="sensorname">Sensor Name</label>
+                            <input type="" class="form-control" name="sensorname" placeholder="Sensor Name"><br>
+
+                            <label for="latitude">Latitude</label>
+                            <input type="" class="form-control" name="latitude" placeholder="latitude"><br>
+                            <label for="longitude">Longitude</label>
+                            <input type="" class="form-control" name="longitude" placeholder="longitude"><br>
+
+                            <label for="hubid">Select a Hub</label>
+                            <select class="form-control" name="hubid">
+                            <% for(var i=0;i<stations.length;i++) { %>
+                                <option value="<%=stations[i]._id%>"><%=stations[i].stationname%></option>
+                            <% } %>
+                            </select>
+                            <!--<input type="" class="form-control" name="hubid" placeholder="Hub Id"><br>-->
+
+                            <label for="sensorurl">Sensor URL for data collection API</label>
+                            <input type="" class="form-control" name="sensorurl" placeholder="Sensor URL"><br>
+
+                            <label for="sensortype">Sensor Type</label>
+                            <select class="form-control" name="sensortype">
+                                <option value="Wind Speed">Wind Speed</option>
+                                <option value="Wind Direction">Wind Direction</option>
+                                <option value="Tidal Speed">Tidal Speed</option>
+                            </select>
+                            <label for="sensorstatus">Sensor Status</label>
+                            <select class="form-control" name="sensorstatus">
+                                <option value="ON">ON</option>
+                                <option value="OFF">OFF</option>
+                            </select>
+                            <p class="help-block">Please Provide the Correct Information so that We can MAP your Sensor correctly.</p>
+                            <div style="text-align: center;">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="reset" class="btn btn-danger">Reset</button><br><br>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+
+    <script src="angularjs/sensors.js"></script>
+
+    <link href="stylesheets/bootstrap-switch.css" rel="stylesheet">
+    <script src="javascripts/bootstrap-switch.js"></script>
+    <script>
+        $ ( function(){
+            //$("[name='my-checkbox']").bootstrapSwitch();
+            $('.mycheckboxes').bootstrapSwitch();
+            $('.mycheckboxes').on('switchChange.bootstrapSwitch',function(event,state) {
+                alert(state);
+                $(this).bootstrapSwitch('state', state, true);
+            });
+        });
+    </script>
+</head>
+<body>
+<br><br>
+<div class="container" >
+    <% if(stations.length > 0){ %>
+    <table class="table table-hover">
+        <tr>
+            <th>Station</th>
+            <th>Sensor ID</th>
+            <th>Sensor Type</th>
+            <th>Sensor Owner</th>
+            <th>Subscription Status</th>
+        </tr>
+        <% for(var i =0; i < stations.length; i++) {
+        for(var j=0; j < stations[i].sensors.length; j++) { %>
+        <tr>
+            <td><%= stations[i].stationname %></td>
+            <td><%= stations[i].sensors[j].sensorid %></td>
+            <td><%= stations[i].sensors[j].sensortype %></td>
+            <td><%= stations[i].sensors[j].ownerid %></td>
+            <td><input type="checkbox" class = "mycheckboxes" name="mycheckbox" id="<%= stations[i].sensors[j].sensorid %>" checked></td>
+        </tr>
+        <% }
+        } %>
+    </table><% } %>
+    Hello Fool!!!
+
+    <input type="checkbox" name="my-checkbox" checked>
+    <input type="checkbox" name="my-checkbox" >
+
+    <br>
+
+    <!--<table class="table table-hover">-->
+        <!--<tr>-->
+            <!--<th>Station</th>-->
+            <!--<th>Sensor ID</th>-->
+            <!--<th>Sensor Type</th>-->
+            <!--<th>Sensor Owner</th>-->
+            <!--<th>Subscription Status</th>-->
+        <!--</tr>-->
+        <!--<tbody ng-repeat="x in stationslist">-->
+
+        <!--<tr ng-repeat="y in x.sensors">-->
+
+            <!--<td>{{ x.stationname }}</td>-->
+            <!--<td>{{ y.sensorid }}</td>-->
+            <!--<td>{{ y.sensortype }}</td>-->
+            <!--<td>{{ y.ownerid }}</td>-->
+            <!--<td><input type="checkbox" id="{{ y.sensorid }}" name = "mycheckbox" checked></td>-->
+            <!--<td><input type="checkbox" name="mycheckbox" checked></td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+    <!--</table>-->
+
+
+</div>
+
+
+
+</body>
+
+</html>

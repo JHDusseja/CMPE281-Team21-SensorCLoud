@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+
+    <link href="stylesheets/bootstrap-switch.css" rel="stylesheet">
+    <script src="javascripts/bootstrap-switch.js"></script>
+    <script>
+        $(function() {
+            $('input[type="checkbox"]').bootstrapSwitch();
+        });
+    </script>
+</head>
+<body>
+    <br><br>
+    <div class="container">
+        <% if(userStations.length > 0){ %>
+            <table class="table table-hover">
+                <tr>
+                    <th>Station</th>
+                    <th>Sensor ID</th>
+                    <th>Sensor Type</th>
+                    <th>Sensor Owner</th>
+                    <th>Subscription Status</th>
+                </tr>
+            <% for(var i =0; i < userStations.length; i++) {
+                for(var j=0; j < userStations[i].sensors.length; j++) {
+                    if(typeof (userStations[i].sensors[j].subscribers) != 'undefined'){
+                        for(var k=0; k < userStations[i].sensors[j].subscribers.length; k++) {
+                            if( userStations[i].sensors[j].subscribers[k] == userid ){ %>
+                                    <tr>
+                                        <td><%= userStations[i].stationname %></td>
+                                        <td><%= userStations[i].sensors[j].sensorid %></td>
+                                        <td><%= userStations[i].sensors[j].sensortype %></td>
+                                        <td><%= userStations[i].sensors[j].ownerid %></td>
+                                        <td><input type="checkbox" id="<%= userStations[i].sensors[j].sensorid %>" checked></td>
+                                    </tr>
+                            <% }
+                        }
+                    }
+                }
+            } %>
+        </table><% } %>
+        Hello Fool!!!
+
+        <input type="checkbox" name="my-checkbox" checked>
+        <input type="checkbox" name="my-checkbox2" >
+
+
+    </div>
+</body>
+</html>
