@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+
+    <link href="stylesheets/bootstrap-switch.css" rel="stylesheet">
+    <script src="javascripts/bootstrap-switch.js"></script>
+    <script>
+        $(function() {
+            $('input[type="checkbox"]').bootstrapSwitch();
+        });
+    </script>
+</head>
+<body>
+<br><br>
+<div class="container">
+    <% if(userStations.length > 0){ %>
+    <table class="table table-hover">
+        <tr>
+            <th>Station</th>
+            <th>Sensor ID</th>
+            <th>Sensor Type</th>
+            <th>Sensor Owner</th>
+            <th>Time Subscribed</th>
+            <th>Amount Charged</th>
+        </tr>
+<%var t = 0%>
+        <% for(var i =0; i < userStations.length; i++) {
+        for(var j=0; j < userStations[i].sensors.length; j++) {
+        if(typeof (userStations[i].sensors[j].subscribers) != 'undefined'){
+        for(var k=0; k < userStations[i].sensors[j].subscribers.length; k++) {
+        if( userStations[i].sensors[j].subscribers[k].userid == userid ){ %>
+        <tr>
+            <td><%= userStations[i].stationname %></td>
+            <td><%= userStations[i].sensors[j].sensorid %></td>
+            <td><%= userStations[i].sensors[j].sensortype %></td>
+            <td><%= userStations[i].sensors[j].ownerid %></td>
+            <%var h = (Math.abs(new Date()- userStations[i].sensors[j].subscribers[k].timestamp)/36e5).toFixed(2)%>
+            <td><%= h%> hours</td>
+            <%var a = h*.6 %>
+            <td><%= a%>$</td>
+            <%t += a%>
+        </tr>
+
+        <% }
+        }
+        }
+        }
+        } %>
+
+        <tr><td></td><td></td><td>Total Amount </td><td></td><td></td><td><%= t%>$</td> </tr>
+    </table>
+
+    <table class="table table-hover">
+        <tr>
+            <th>Station</th>
+            <th>Sensor ID</th>
+            <th>Sensor Type</th>
+            <th>Sensor Owner</th>
+            <th>API Calls</th>
+            <th>Amount Charged</th>
+        </tr>
+
+        <br><br><br>
+        <%var z = 0%>
+        <% for(var i =0; i < userStations.length; i++) {
+        for(var j=0; j < userStations[i].sensors.length; j++) {
+        if(typeof (userStations[i].sensors[j].subscribers) != 'undefined'){
+        for(var k=0; k < userStations[i].sensors[j].subscribers.length; k++) {
+        if( userStations[i].sensors[j].subscribers[k].userid == userid && userStations[i].sensors[j].subscribers[k].api != 'undefined'){ %>
+        <tr>
+            <td><%= userStations[i].stationname %></td>
+            <td><%= userStations[i].sensors[j].sensorid %></td>
+            <td><%= userStations[i].sensors[j].sensortype %></td>
+            <td><%= userStations[i].sensors[j].ownerid %></td>
+            <td><%= userStations[i].sensors[j].subscribers[k].api%> Calls</td>
+            <%var x = userStations[i].sensors[j].subscribers[k].api*.05 %>
+            <td><%= x%>$</td>
+            <%z += x%>
+        </tr>
+
+        <% }
+        }
+        }
+        }
+        } %>
+
+        <tr><td></td><td></td><td>Total Amount </td><td></td><td></td><td><%= z%>$</td> </tr>
+       <tr></tr><tr></tr>
+
+        <br><br>
+
+  <tr><td><h4>Grand Total</h4></td><td></td><td><td></td><td><h4><%= t + z%></h4></td></tr>
+
+
+    </table>
+
+    <% } %>
+
+
+
+</div>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Green Cloud</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="http://cdn.pubnub.com/pubnub-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" >
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <style>
+        .modal-dialog {
+            width: 900px; /* New width for default modal */
+        }
+
+        ul
+        {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #666666;
+        }
+
+        li
+        {
+            float: right;
+            border-right:1px solid #bbb;
+        }
+
+        li a:link, a:visited
+        {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover
+        {
+            background-color: #3399ff;
+        }
+
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+        #floating-panel {
+            background-color: #fff;
+            border: 1px solid #999;
+            left: 25%;
+            padding: 5px;
+            position: absolute;
+            top: 10px;
+            z-index: 5;
+        }
+    </style>
+
+    <script>
+    var mydatajson = new Array();
+    var mydata;
+    var lat;
+    var lng;
+    var watchID;
+    var geoLoc;
+    var map, heatmap, marker, info;
+    var imarker;
+    //var mar = new Array();
+    var d = new Date();
+    var x  =  d.getMonth();
+    $(function() {
+    $.ajax({
+    method: "get",
+    url: '/getPointer',
+    data: " ",
+    success: function (data) {
+    mydata = data;
+
+    initMap();
+
+
+    }
+    });
+
+    });
+
+    </script>
+    <!--<script>-->
+        <!--var mydatajson = new Array();-->
+        <!--var mydata;-->
+        <!--var lat,lon;-->
+        <!--var lng;-->
+        <!--var watchID;-->
+        <!--var geoLoc;-->
+        <!--var map, heatmap, marker, info;-->
+        <!--var imarker;-->
+        <!--var d = new Date();-->
+        <!--var x  =  d.getMonth();-->
+        <!--var flag=false;-->
+        <!--$(function() {-->
+
+            <!--$.ajax({-->
+                <!--method: "get",-->
+                <!--url: '/getPointer',-->
+                <!--data: " ",-->
+                <!--success: function (data) {-->
+                    <!--mydata = data;-->
+
+                    <!--initMap();-->
+                <!--}-->
+
+            <!--});-->
+        <!--});-->
+        <!--alert(mydata);-->
+    <!--</script>-->
+
+</head>
+
+<body style="height:100%">
+<ul>
+    <li><a href="#aboutus-modal" data-toggle="modal" data-target="#aboutus-modal">About Us</a></li>
+    <li><a href="#" onclick="goback();">Show US map</a></li>
+</ul>
+<script>
+
+
+
+
+
+    //tracker();
+    //alert(lat);
+
+    function initMap() {
+        var infowindow = new google.maps.InfoWindow({
+            content: ''
+        });
+
+        //var myLatLng = new google.maps.LatLng(-25.363, 131.044);
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 5,
+            center: {lat: 33, lng: -100},
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+
+        });
+
+        //alert(mydata.results.length);
+        var image = {
+            url: 'http://jamaee.sp.com.sa/Resources/images/Icons/blue_dot_circle.png' // url
+            //scaledSize: new google.maps.Size(40, 40)
+        };
+        for (var i = 0; i < mydata.results.length; i++) {
+
+            marker = new google.maps.Marker({
+
+                icon: image,
+                position: new google.maps.LatLng(mydata.results[i].latitude, mydata.results[i].longitude),
+                map: map,
+                title: mydata.results[i].name,
+                id: mydata.results[i].id,
+                animation: google.maps.Animation.DROP
+
+
+            });
+           bindInfoWindow(marker, map, infowindow);
+        }
+    }
+
+        function bindInfoWindow(marker, map, infowindow) {
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent('<div class="panel panel-default">' +
+                        '<div class="panel-heading" > </div>' +
+                        '<div class="panel-body">' +
+                        '<p><button type="button" class="btn btn-primary hotelbuttons" id="'+marker.id+'">View Sensors</button></p>' +
+                        '<p><a href="/del?id='+marker.id+'"><button type="button" class="btn btn-primary hotelbuttons" id="'+marker.id+'">Delete Hub</button></a></p>' +
+                        '</div>' +
+                        '</div>');
+                infowindow.open(map, marker);
+                //info.open(map, marker);
+            });
+        }
+
+
+
+        function goback() {
+            if (watchID != null) {
+                navigator.geolocation.clearWatch(watchID);
+            }
+            map.setZoom(5);
+            map.setCenter({lat: 33, lng: -100});
+        }
+
+
+
+
+</script>
+<div id="map"></div>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization&callback=initMap"></script>
+<!--</script>-->
+</body>
+</html>
+
+
